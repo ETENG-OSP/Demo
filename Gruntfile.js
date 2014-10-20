@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
+  grunt.loadTasks('tasks');
 
   grunt.initConfig({
     config: require('./config/config'),
@@ -16,27 +17,32 @@ module.exports = function (grunt) {
     clean: require('./config/clean')
   });
 
+
   grunt.registerTask('build', [
     'clean',
     'prepareHtml',
     'copy',
     'useminPrepare',
     'generated',
-    'usemin',
-    'clean:temp'
+    'usemin'
   ]);
 
   grunt.registerTask('generated', [
     'concat',
     'cssmin',
     'uglify',
-    'less'
+    'copy:less',
+    'less',
+    'clean:less'
   ]);
 
   grunt.registerTask('prepareHtml', [
     'includeSource',
+    'templateBower',
     'wiredep',
-    'lineending'
+    'lineending',
+    'copy:favicon',
+    'templateAngular'
   ]);
 
   grunt.registerTask('serve', [
@@ -47,4 +53,5 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', ['serve']);
+
 };

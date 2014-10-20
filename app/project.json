@@ -1,0 +1,19 @@
+{
+  "angularModules": [
+    "app.constants",
+    "app.controllers",
+    "app.filters",
+    "app.routes",
+    "app.services",
+    "angularFileUpload"
+  ],
+
+  "bowerComponents": {
+    "angular-file-upload": "*"
+  },
+
+  "proxy": {
+    "/api": "http://localhost:8080",
+    "/servlet": "http://localhost:8080"
+  }
+}

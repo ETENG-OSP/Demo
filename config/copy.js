@@ -12,11 +12,15 @@ module.exports = {
     dest: "<%= config.dist %>/assets"
   },
   framework: {
-    src: "<%= config.framework %>/index.html",
+    src: "<%= config.generated %>/index.html",
     dest: "<%= config.dist %>/index.html"
   },
   favicon: {
-    src: "<%= config.framework %>/favicon.ico",
-    dest: "<%= config.dist %>/favicon.ico"
+    src: '<%= config.framework %>/favicon.ico',
+    dest: '<%= config.dist %>/favicon.ico'
+  },
+  less: {
+    src: '<%= config.generated %>/app.less',
+    dest: '<%= config.app %>/app.less'
   }
 };

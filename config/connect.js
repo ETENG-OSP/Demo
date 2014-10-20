@@ -1,9 +1,6 @@
 var httpProxy = require('http-proxy');
-var url = require('url');
 var config = require('./config');
-
-var apiServerUrl = url.parse(config.apiServer);
-var uploadServerUrl = url.parse(config.uploadServer);
+var project = require('../app/project');
 
 var proxy = httpProxy.createProxyServer();
 
@@ -22,31 +19,26 @@ module.exports = {
     options: {
       livereload: true,
       middleware: function (connect) {
-        return [
-          connect().use('/bower_components', connect.static('bower_components')),
+        var app = connect();
+        var middlewares = [
+          app.use('/bower_components', connect.static('bower_components')),
           connect.static(config.app),
-          connect.static(config.framework),
-          connect().use(apiServerUrl.pathname, function (req, res) {
-            console.log('api proxy');
-            proxy.web(req, res, {
-              target: config.apiServer
-            }, function (e) {
-              console.error(e);
-              res.statusCode = 500;
-              res.end();
-            });
-          }),
-          connect().use(uploadServerUrl.pathname, function (req, res) {
-            console.log('upload proxy');
-            proxy.web(req, res, {
-              target: config.uploadServer
-            }, function (e) {
-              console.log(argument);
-              res.statusCode = 500;
-              res.end();
-            });
-          })
+          connect.static(config.generated)
         ];
+
+        Object.keys(project.proxy).forEach(function (pathname) {
+          app.use(pathname, function (req, res) {
+            console.log('proxy: %s', req.url);
+            proxy.web(req, res, {
+              target: project.proxy[pathname] + pathname
+            }, function (e) {
+              res.statusCode = 500;
+              res.end();
+            });
+          });
+        });
+
+        return middlewares;
       }
     }
   }
